@@ -1271,6 +1271,8 @@ encNav(encState);
        }
        break;
     }
+    case yesBtnPressed:
+    case sendBtnPressed:
     case encoderBtnPressed: {
       if (*selectedListFileCount == 0){
         
@@ -1282,16 +1284,25 @@ encNav(encState);
       if(*selectedListFileCount > 0){
         switch(currentScreen){
         case PATCHES:
-        
         sendPatch(patchList[selectedFile].data());
         //sendPatch(*selectedList,selectedFile);
         DS = false;
         return;
         break; 
         case SEQUENCES:
-        navBtnPressed = true;
-        turnOffSeqApp();
-        loadSequence(*selectedList,selectedFile);
+        if(seqStarted){
+          turnOffSeqApp();    
+          loadSequence(sequenceList[selectedFile].data());
+          seqPlayPosition = 0;
+          seqStarted = true;
+          seqAppStatus = true;
+          currentScreen = SEQUENCER;
+          screenSwitch();
+          }else if (!seqStarted){
+            loadSequence(sequenceList[selectedFile].data());
+            currentScreen = SEQUENCER;
+            screenSwitch();
+        }
         return;
         break; 
         case REMAPLIST:
@@ -1333,36 +1344,10 @@ encNav(encState);
   
   break;
 }
-    case sendBtnPressed:{
-      if (*selectedListFileCount == 0){
-        
-        displayMsg("no file to send!");
-        delay(500);
-        DS = false;
-        return;
-      }
-      if(*selectedListFileCount > 0){
-        switch(currentScreen){
-        case PATCHES:
-        sendPatch(*selectedList,selectedFile);
-        DS = false;
-        return;
-        break; 
-        case SEQUENCES:
-        
-        break; 
-        case REMAPLIST:
-        
-        break; 
-        case TRACKERLIST:
-        
-        break; 
-      }
-        
-        return;  
-      }
-       break;
-    }
+
+    
+    break;
+    
     case downBtnPressed:{
       if (selection < selectionMaximum) {
         selectedFile++;
@@ -1535,7 +1520,7 @@ void handleNavForPatchSelection(){
 void deviceSelectNavCommands() {
 
   switch (buttonPressed) {
-
+    
     case yesBtnPressed: {
         chooseDevice();
         currentScreen = MENU;

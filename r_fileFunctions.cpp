@@ -614,8 +614,9 @@ void saveNewFile() {
 //gabagool
 void sendPatch(char chosenPatch[]) {
 bool fileMatchesDevice = false;
-    char patchfileName[MAX_FILE_NAME_LENGTH + 1];
-    strncpy(patchfileName, chosenPatch, 20);
+    char patchfileName[25];
+    strncpy(patchfileName, chosenPatch, 25);
+    patchfileName[sizeof(patchfileName) - 1] = '\0';
     if(!patchLoaded){
       if (!checkFileName2(patchfileName)) {     
   savePanel();
@@ -633,7 +634,7 @@ bool fileMatchesDevice = false;
 
   
 
-    patchfileName[sizeof(patchfileName) - 1] = '\0';
+    
     char filePath[51];
     strcpy(filePath, "/");
     strcat(filePath, deviceFolder);
