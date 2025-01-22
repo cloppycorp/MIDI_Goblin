@@ -713,92 +713,81 @@ void handleValueEditsForControllerOptions(){
   }
 }
 void handleValueEditsForReMap(){
-    selectedBool = nullptr;
+  byte deviceSize = deviceParams.size() - 1;
+switch(selection){
+  case 0:
     selectedParameterVal = nullptr;
     selectedParameterMin = nullptr;
-    selectedParameterMax = nullptr;     
-        
-    switch(selection){
-      case 0:{
-      selectedBool = &reMapAppStatus;
-      }     
-      break;
-      case 1:{
-        if (receivedDeviceCc != 255){
-          midiIndex[receivedDeviceCc]->ccNum;
-          selectedBool = &midiIndex[receivedDeviceCc]->reMapped;
-        }
-      
-      }
-      break;
-      case 2:{
-        if (receivedDeviceCc != 255){
-          midiIndex[receivedDeviceCc]->reMapCc;
-          selectedBool = &midiIndex[receivedDeviceCc]->reMapped;
-        }
-      
-      
-        selectedParameterVal = &reMapNewCcNum;
-        selectedParameterMin = &midiMin;
-        selectedParameterMax = &midiMax;      
-      }
-      break;
+    selectedParameterMax = nullptr;
+  break;
+  case 1:
+    selectedParameterVal = &remapIndex;
+    selectedParameterMin = &midiMin;
+    selectedParameterMax = &deviceSize;
+  break;
+  case 2:
+    selectedParameterVal = &reMapNewCcNum;
+    selectedParameterMin = &midiMin;
+    selectedParameterMax = &midiMax;
+  break;
+  case 3:
+    selectedParameterVal = nullptr;
+    selectedParameterMin = nullptr;
+    selectedParameterMax = nullptr;
+  break;
+}
 
+
+switch(buttonPressed){
+  case yesBtnPressed:
+    if(selection == 0){
+      changeBoolState(selectedAppStatus);
+      DS = false;
+    }
+    if(selection == 1 || selection == 2){
+      if(remapIndex != 255){
+        selectedBool = &deviceParams[remapIndex].reMapped;
+         changeBoolState(selectedBool);
+         if(deviceParams[remapIndex].reMapped == true){
+         deviceParams[remapIndex].reMapCc = reMapNewCcNum;
+         }
+         if(deviceParams[remapIndex].reMapped == false){
+          deviceParams[remapIndex].reMapCc = 255;
+         }
+         DS = false;
+      }
     }
     
-encNav(encState);
-  
-  switch(buttonPressed){
-    case yesBtnPressed:{
-      if(selection == 0){
-        changeBoolState(selectedBool);
-        DS = false;
-        return;
-      }
-      if (selection == 1 || selection == 2){
-        if (midiIndex[receivedDeviceCc]->ccNum != reMapNewCcNum){
-          changeBoolState(selectedBool);
-          if(*selectedBool == true){
-          midiIndex[receivedDeviceCc]->reMapCc = reMapNewCcNum;
-          }
-          if(*selectedBool == false){
-            midiIndex[receivedDeviceCc]->reMapCc = 255;
-          }
-          DS = false;
-          return;   
-          }
-      }
-
-    }
-    break;
-    case leftBtnPressed:{
-      if(selection == 0){
-      changeBoolState(selectedBool);
-      DS = false;
-      return;        
-      }
-     if(selection == 2){
-      decreaseParameterValue(selectedParameterVal, selectedParameterMin);
-      DS = false;
-      return;
-     }
-    }
-    break;
-    case rightBtnPressed:{
-      if (selection == 0){
-      changeBoolState(selectedBool);
-      DS = false;
-      return;      
-      }
-      if (selection == 2){
-        increaseParameterValue(selectedParameterVal, selectedParameterMax);
-      DS = false;
-      return;
-      }
-
-    }
-    break;
+  break;
+  case leftBtnPressed:
+  if(selection == 0){
+    changeBoolState(selectedAppStatus);
+    DS = false;
   }
+    if(selection == 1){
+    decreaseParameterValue(selectedParameterVal,selectedParameterMin);
+    DS = false;
+    }
+    if(selection == 2){
+    decreaseParameterValue(selectedParameterVal,selectedParameterMin);
+    DS = false;
+    }
+  break;
+  case rightBtnPressed:
+  if(selection == 0){
+    changeBoolState(selectedAppStatus);
+    DS = false;
+  }
+    if(selection == 1){
+      increaseParameterValue(selectedParameterVal,selectedParameterMax);
+      DS = false;
+    }
+    if(selection == 2){
+      increaseParameterValue(selectedParameterVal,selectedParameterMax);
+      DS = false;
+    }
+  break;
+}
 }
 void handleValueEditsForSeqSwang(){
   

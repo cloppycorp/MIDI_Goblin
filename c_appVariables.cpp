@@ -109,7 +109,7 @@ byte reMapOutChannel = 2;
 byte receivedDeviceCc = 255;
 byte receivedDeviceCcIndex = 0;
 bool reMapAppStatus = false;
-
+byte remapIndex = 0;
 byte reMapNewCcNumMin = 0;
 byte reMapDeviceCcIndexMax;
 byte reMapNewCcNum = 0;

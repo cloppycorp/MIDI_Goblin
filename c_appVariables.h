@@ -105,6 +105,7 @@ extern byte reMapOutChannel;
 extern byte receivedDeviceCc;
 extern bool reMapAppStatus;
 extern byte reMapNewCcNum;
+extern byte remapIndex;
 //sequencer---------------------------------
 extern bool swangBarVisible;
 extern int8_t seqSwangMin;

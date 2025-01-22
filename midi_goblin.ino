@@ -479,10 +479,21 @@ if (currentScreen == CONTROLLER || currentScreen == MONITOR){
 
 
 if(currentScreen == REMAP){
-    if(receivedCc != receivedDeviceCc){
+  if(selection == 1){
+    if(midiIndex[receivedCc] != nullptr){
     receivedDeviceCc = receivedCc;
-    DS = false;  
+    remapIndex = midiIndex[receivedCc]->index;
+    DS = false;
+    }else{
+      receivedDeviceCc = 255;
+      remapIndex = 255;
+      DS = false;
     }
+  }
+  if (selection == 2){
+    reMapNewCcNum = receivedCcValue;
+    DS = false;
+  }
 }
 
 if (reMapAppStatus){
@@ -674,14 +685,27 @@ void drawSelectionForApp(){
     if (selection == 2){
       drawWhiteBox(tableColumnB[selection].x,tableColumnB[selection].y, tableColumnB_2);
     }
-    if (selection == 3 && currentScreen == REMAP){
-      drawBigCell(0,53,"SAVE/LOAD",true);
-    }else if (selection == 3){
+    if (selection == 3){
       drawWhiteBox(tableColumnB[selection].x,tableColumnB[selection].y, tableColumnB_3);
     }
       
 }
-
+void drawSelectionForRemap(){
+  switch(selection){
+    case 0:
+      drawWhiteBox(tableColumnB[selection].x,tableColumnB[selection].y, tableColumnB_0);
+    break;
+    case 1:
+      drawWhiteBox(tableColumnB[selection].x,tableColumnB[selection].y, tableColumnB_1);
+    break;
+    case 2:
+      drawWhiteBox(tableColumnB[selection].x,tableColumnB[selection].y, tableColumnB_2);
+    break;
+    case 3:
+      drawBigCell(0,53,"SAVE/LOAD",true);
+    break;
+  }
+}
 void drawSelectionForLfo(){
   switch(selection){
         //draw box around wavebox
@@ -889,7 +913,7 @@ void drawSelection(byte selection) {
     break;
     }
     case REMAP:{
-    drawSelectionForApp();
+    drawSelectionForRemap();
     break;
     }
     case LFO:{
@@ -1241,10 +1265,12 @@ void drawScreenContent() {
     strcpy(tableColumnA_0, "STATUS");
     strcpy(tableColumnB_0, (*selectedAppStatus ?  "ON" : "OFF"));
     strcpy(tableColumnA_1, "DEVICE CC");
-    if (receivedDeviceCc == 255){
-      sprintf(tableColumnB_1, "%d",0);    
-    }else if(receivedDeviceCc != 255){
-    sprintf(tableColumnB_1, "%d",receivedDeviceCc);
+    if(receivedDeviceCc == 255){
+      strcpy(tableColumnB_1, "ERROR");
+      tableColumnB_1[5] = '\0';  
+    }else if (receivedDeviceCc != 255){
+      strncpy(tableColumnB_1, deviceParams[remapIndex].name, 9);
+    tableColumnB_1[9] = '\0';
     }
     strcpy(tableColumnA_2, "NEW CC");
     sprintf(tableColumnB_2, "%d",reMapNewCcNum);    
@@ -1256,10 +1282,10 @@ void drawScreenContent() {
     tableColumnA_4,tableColumnB_4,
     3);
     if (receivedDeviceCc != 255){
-    if (midiIndex[receivedDeviceCc]->reMapped == false){
+    if (deviceParams[remapIndex].reMapped == false){
     drawBigCell(0,41,"YES = set new cc",false);
-    }else if(midiIndex[receivedDeviceCc]->reMapped == true){
-    drawBigCell(0, 41, midiIndex[receivedDeviceCc]->ccNum," MAPPED TO: ", midiIndex[receivedDeviceCc]->reMapCc, true);
+    }else if(deviceParams[remapIndex].reMapped == true){
+    drawBigCell(0, 41, deviceParams[remapIndex].ccNum," MAPPED TO: ", deviceParams[remapIndex].reMapCc, true);
     }
 
     }

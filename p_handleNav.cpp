@@ -133,7 +133,9 @@ void loadAppValues() {
     case REMAP:{
     previousScreen = currentScreen;
     strcpy(currentScreenName, "REMAP");
-    selectedAppStatus = &reMapAppStatus;  
+    selectedAppStatus = &reMapAppStatus;
+    remapIndex = 0;
+    receivedDeviceCc = deviceParams[remapIndex].ccNum;
     valueMinMax(selection, 0, selectionMinimum, 0, selectionMaximum, 3);
     break;
     }
@@ -1548,13 +1550,15 @@ void handleNavigationForRemap(){
     }
     break;
     case yesBtnPressed:{
-      if (selection == 3){
-        currentScreen = REMAPLIST;
-        navBtnPressed = true;
-        screenSwitch();
-        return;
+      
+        if (selection == 3){
+          currentScreen = REMAPLIST;
+          navBtnPressed = true;
+          screenSwitch();
+          return;
+        }
+        
       }
-    }
     break;
     case upBtnPressed:{
       if (selection > 0){
