@@ -177,7 +177,7 @@ byte midiNoteThruOutChannel = 2;
 byte midiCcThruOutChannel = 2;
 char midiOutChannelNames[11][15] = {
 "PATCHES",
-"ARPEGGIATOR_1",
+"ARPEGGIATOR",
 "AUTOCHORD",
 "ARP-NOTE",
 "SEQUENCER",

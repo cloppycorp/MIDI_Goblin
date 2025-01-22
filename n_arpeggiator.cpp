@@ -49,7 +49,7 @@ void drawArpeggiatorOptions(){
   display.print(arpStepSync ? "ON" : "OFF");
 
   display.setCursor(listGridColumnA[3].x,listGridColumnA[3].y);
-  display.print("ARP OUT CH 1: ");
+  display.print("ARP OUT CH: ");
   display.setCursor(listGridColumnB[3].x,listGridColumnB[3].y);
   display.print(arpOutChannel);
 

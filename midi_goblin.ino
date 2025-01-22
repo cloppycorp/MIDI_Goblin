@@ -158,6 +158,23 @@ if (status == 0x80 && note == autoChordRootNote  && !autoChordKey){
 
 
 void handleMidiNote(unsigned long currentTime, int status, byte note, byte velocity,byte incomingMidiChannel){
+  if(midiNoteThru){
+      if(status == midi::NoteOn){
+      if(arpAppStatus){
+        if(arpNotesHeld == 0 || arpNotesHeld == arpLengthVal ){
+        MIDI.sendNoteOn(note,velocity,midiNoteThruOutChannel);    
+        }
+      }
+      
+      if(!arpAppStatus){
+        MIDI.sendNoteOn(note,velocity,midiNoteThruOutChannel);
+      }
+      }
+      if(status == midi::NoteOff){
+      MIDI.sendNoteOff(note,0,midiNoteThruOutChannel);  
+      }
+  }
+
   if (arpAppStatus){
     arpeggiator(currentTime, status, note, velocity);
   }
@@ -179,14 +196,7 @@ void handleMidiNote(unsigned long currentTime, int status, byte note, byte veloc
       chordEntry(note,selectedArrayEntry);
       }
   }
-  if(midiNoteThru){
-      if(status == midi::NoteOn){
-      MIDI.sendNoteOn(note,velocity,midiNoteThruOutChannel);
-      }
-      if(status == midi::NoteOff){
-      MIDI.sendNoteOff(note,0,midiNoteThruOutChannel);  
-      }
-  }
+
      lastMidiNoteNumberReceived = note;
     lastMidiNoteVelocityReceived = velocity;
     lastMidiNoteChannelReceived = incomingMidiChannel;

@@ -265,4 +265,4 @@ void sendNrpn(byte MSB, byte LSB, byte MSBDAT, byte LSBDAT){
 }
 
 byte maxTriggers = 25;  
-float systemVersion = 1.02;
+float systemVersion = 1.03;
