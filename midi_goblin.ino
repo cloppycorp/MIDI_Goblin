@@ -170,8 +170,27 @@ void handleMidiNote(unsigned long currentTime, int status, byte note, byte veloc
         MIDI.sendNoteOn(note,velocity,midiNoteThruOutChannel);
       }
       }
+      
       if(status == midi::NoteOff){
-      MIDI.sendNoteOff(note,0,midiNoteThruOutChannel);  
+
+          if (arpAppStatus && arpLatch){
+            bool noteInArray = false;
+            for(byte i = 0; i < ARP_ARRAY_SIZE; i++){
+              if (arpArray[i] == note){
+                noteInArray = true;
+                break;
+              }
+            }
+            if(noteInArray){
+              return;
+            }
+            if(!noteInArray){
+              MIDI.sendNoteOff(note,0,midiNoteThruOutChannel);
+            }  
+          }
+          if(!arpAppStatus || arpAppStatus && !arpLatch){
+            MIDI.sendNoteOff(note,0,midiNoteThruOutChannel);
+          }
       }
   }
 

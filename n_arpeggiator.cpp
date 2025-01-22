@@ -284,6 +284,16 @@ void removeFromArpArray( byte note,byte velocity){
   }
 }
 void arpeggiator(unsigned long currentTime,byte status, byte note,byte velocity){
+if (status == midi::NoteOff && arpLatch){
+  
+  for(byte i = 0; i < ARP_ARRAY_SIZE; i++){
+    if (arpArray[i] == note){
+      return;
+    }
+  }
+
+}  
+    
 if (status == midi::NoteOn && arpNotesHeld <= arpLengthMax){
   bool noteInArray = false;
   for(byte i = 0; i < ARP_ARRAY_SIZE; i++){
@@ -306,6 +316,8 @@ if (status == midi::NoteOff && arpNotesHeld > 0 ){
    removeFromArpArray(note, velocity);
 }
 }
+
+
 if (arpArrayUpdated){
   sortArpArray(arpModeVal);
   updateArpTranspArrays();
@@ -319,21 +331,6 @@ if (arpArray[0] == 255){
   stopArp();
 }
 
-//if the arpeggio if holding the maximum number of notes, and midiNote thru is enabled, 
-//and midinotethru channel != arpNote secondary channel
-//transmit the note on the secondary arpeggiator channel
-if ((status == midi::NoteOn || status == midi::NoteOff) 
-   && arpNotesHeld == arpLengthMax 
-   && arpOutChannel != midiNoteThruOutChannel){
 
-  if (status == midi::NoteOn){
-    MIDI.sendNoteOn(note,velocity,arpOutChannel);
-    arpOverFlow = true;
-  }
-  if (status == midi::NoteOff){
-    MIDI.sendNoteOff(note,0,arpOutChannel);
-    arpOverFlow = false;
-  }
-}
 
 }
